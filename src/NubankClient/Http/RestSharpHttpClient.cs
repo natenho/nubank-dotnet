@@ -8,10 +8,10 @@ using RestRequest = RestSharp.Serializers.Newtonsoft.Json.RestRequest;
 
 namespace NubankClient.Http
 {
-    class HttpClient : IHttpClient
+    internal class RestSharpHttpClient : IHttpClient
     {
         private readonly IRestClient _client = new RestClient();
-        public HttpClient()
+        public RestSharpHttpClient()
         {
             _client.AddHandler("application/json", new NewtonsoftJsonSerializer());
         }

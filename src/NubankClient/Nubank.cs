@@ -21,7 +21,7 @@ namespace NubankClient
         private string _authToken;
                 
         public Nubank(string login, string password)
-            : this(new HttpClient(), login, password)
+            : this(new NativeHttpClient(), login, password)
         { }
 
         public Nubank(IHttpClient httpClient, string login, string password)
