@@ -1,5 +1,9 @@
+using Newtonsoft.Json;
+using NubankClient.Caching;
 using NubankClient.Http;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace NubankClient
@@ -15,7 +19,7 @@ namespace NubankClient
         private const string DiscoveryAppUrl = "https://prod-s0-webapp-proxy.nubank.com.br/api/app/discovery";
 
         public Endpoints(IHttpClient httpClient)
-        {            
+        {
             _client = httpClient;
             _autenticatedUrls = new Dictionary<string, string>();
         }
@@ -76,6 +80,20 @@ namespace NubankClient
                 return null;
             }
             return source[key];
+        }
+
+        public void LoadFromCache()
+        {
+            _topLevelUrls = FileCache.Get<Dictionary<string, string>>(nameof(_topLevelUrls));
+            _autenticatedUrls = FileCache.Get<Dictionary<string, string>>(nameof(_autenticatedUrls));
+            _appUrls = FileCache.Get<Dictionary<string, string>>(nameof(_appUrls));
+        }
+
+        public void SaveToCache()
+        {
+            FileCache.Set(nameof(_topLevelUrls), _topLevelUrls);
+            FileCache.Set(nameof(_autenticatedUrls), _autenticatedUrls);
+            FileCache.Set(nameof(_appUrls), _appUrls);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using ConsoleTables;
 using NubankClient;
+using NubankClient.Caching;
+using NubankClient.Model;
 using System;
 using System.Threading.Tasks;
 
@@ -15,6 +17,9 @@ namespace NubankClientDemo
             Console.WriteLine("Type your password:");
             var password = Console.ReadLine().Trim();
             var nubankClient = new Nubank(login, password);
+
+            nubankClient.LoadFromCache();
+
             var result = await nubankClient.LoginAsync();
 
             if (result.NeedsDeviceAuthorization)
@@ -48,6 +53,10 @@ namespace NubankClientDemo
             ConsoleTable
                 .From(events)
                 .Write(Format.Alternative);
+
+            nubankClient.SaveToCache();
+
+            FileCache.ExpiresAfter(TimeSpan.FromMinutes(30));
 
             Console.ReadKey();
         }
